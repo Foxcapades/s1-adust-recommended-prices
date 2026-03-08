@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="local.build.props"/>
+
+  <PropertyGroup>
+    <Configurations>IL2Cpp;Mono</Configurations>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='IL2Cpp'">
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Mono'">
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(Configuration)'=='IL2Cpp'">
+    <Reference Include="Harmony">
+      <HintPath>$(MelonIL2CppPath)/net6/0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppInterop.Runtime">
+      <HintPath>$(MelonIL2CppPath)/net6/Il2CppInterop.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="MelonLoader">
+      <HintPath>$(MelonIL2CppPath)/net6/MelonLoader.dll</HintPath>
+    </Reference>
+
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(MelonIL2CppPath)/Il2CppAssemblies/Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppFishNet.Runtime">
+      <HintPath>$(MelonIL2CppPath)/Il2CppAssemblies/Il2CppFishNet.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2Cppmscorlib">
+      <HintPath>$(MelonIL2CppPath)/Il2CppAssemblies/Il2Cppmscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(MelonIL2CppPath)/Il2CppAssemblies/UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

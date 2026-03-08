@@ -1,0 +1,15 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendedPrice", "RecommendedPrice.csproj", "{B6648785-D296-4FDC-BCA6-F4F9E68E9582}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		IL2Cpp|Any CPU = IL2Cpp|Any CPU
+		Mono|Any CPU = Mono|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B6648785-D296-4FDC-BCA6-F4F9E68E9582}.IL2Cpp|Any CPU.ActiveCfg = IL2Cpp|Any CPU
+		{B6648785-D296-4FDC-BCA6-F4F9E68E9582}.IL2Cpp|Any CPU.Build.0 = IL2Cpp|Any CPU
+		{B6648785-D296-4FDC-BCA6-F4F9E68E9582}.Mono|Any CPU.ActiveCfg = Mono|Any CPU
+		{B6648785-D296-4FDC-BCA6-F4F9E68E9582}.Mono|Any CPU.Build.0 = Mono|Any CPU
+	EndGlobalSection
+EndGlobal
