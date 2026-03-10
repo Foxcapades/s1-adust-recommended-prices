@@ -37,4 +37,29 @@
       <HintPath>$(MelonIL2CppPath)/Il2CppAssemblies/UnityEngine.CoreModule.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)'=='Mono'">
+    <Reference Include="Harmony">
+      <HintPath>$(MonoMelonPath)/0Harmony.dll</HintPath>
+    </Reference>
+<!--    <Reference Include="Runtime">-->
+<!--      <HintPath>$(MonoMelonPath)/Runtime.dll</HintPath>-->
+<!--    </Reference>-->
+    <Reference Include="MelonLoader">
+      <HintPath>$(MonoMelonPath)/MelonLoader.dll</HintPath>
+    </Reference>
+
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(MonoAssembliesPath)/Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="FishNet.Runtime">
+      <HintPath>$(MonoAssembliesPath)/FishNet.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib">
+      <HintPath>$(MonoAssembliesPath)/mscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(MonoAssembliesPath)/UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

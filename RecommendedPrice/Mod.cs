@@ -6,9 +6,14 @@ using Il2CppScheduleOne.DevUtilities;
 using Il2CppScheduleOne.Product;
 using Il2CppSystem;
 using Il2CppSystem.Collections.Generic;
+#elif MONO
+using ScheduleOne.DevUtilities;
+using ScheduleOne.Product;
+using System;
+using System.Collections.Generic;
 #endif
 
-[assembly: MelonInfo(typeof(RecommendedPrice.Mod), "Recommended Price", "1.0.0", "Foxcapades")]
+[assembly: MelonInfo(typeof(RecommendedPrice.Mod), "Recommended Price", "1.0.0-b1", "Foxcapades")]
 [assembly: MelonGame("TVGS", "Schedule I")]
 
 #nullable enable
@@ -23,7 +28,8 @@ namespace RecommendedPrice {
 
     private static Action<ProductDefinition>? onProductAction;
 
-    private static readonly Dictionary<string, float> originalProductPrices = new(12);
+    // ReSharper disable once ArrangeObjectCreationWhenTypeEvident
+    private static readonly Dictionary<string, float> originalProductPrices = new Dictionary<string, float>(12);
 
     private static bool inMainScene;
 
@@ -57,14 +63,18 @@ namespace RecommendedPrice {
     [HarmonyPatch(nameof(ProductManager.OnStartServer))]
     static void PreStartServer(ProductManager __instance) {
       // applyModifiers(__instance);
+#if IL2CPP
       onProductAction = DelegateSupport.ConvertDelegate<Action<ProductDefinition>>(onProduct);
+#elif MONO
+      onProductAction = onProduct;
+#endif
 
       __instance.onProductDiscovered += onProductAction;
       __instance.onNewProductCreated += onProductAction;
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch(nameof(ProductManager.Clean))]
+    [HarmonyPatch("Clean")]
     static void PostClean(ProductManager __instance) {
       unapplyModifiers(__instance);
 
