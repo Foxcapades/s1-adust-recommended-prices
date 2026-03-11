@@ -4,21 +4,23 @@ using MelonLoader;
 using Il2CppInterop.Runtime;
 using Il2CppScheduleOne.DevUtilities;
 using Il2CppScheduleOne.Product;
+using Il2CppScheduleOne.UI;
 using Il2CppSystem;
 using Il2CppSystem.Collections.Generic;
 #elif MONO
 using ScheduleOne.DevUtilities;
 using ScheduleOne.Product;
+using ScheduleOne.UI;
 using System;
 using System.Collections.Generic;
 #endif
 
-[assembly: MelonInfo(typeof(RecommendedPrice.Mod), "Recommended Price", "1.0.0-b1", "Foxcapades")]
+[assembly: MelonInfo(typeof(RecommendedPrice.Mod), "Recommended Price", "1.0.0-b2", "Foxcapades")]
 [assembly: MelonGame("TVGS", "Schedule I")]
 
 #nullable enable
 namespace RecommendedPrice {
-  [HarmonyPatch(typeof(ProductManager))]
+  [HarmonyPatch]
   public class Mod: MelonMod {
     private static MelonPreferences_Category? preferences;
     private static MelonPreferences_Entry<float>? weedModifier;
@@ -26,7 +28,8 @@ namespace RecommendedPrice {
     private static MelonPreferences_Entry<float>? methModifier;
     private static MelonPreferences_Entry<float>? shrmModifier;
 
-    private static Action<ProductDefinition>? onProductAction;
+    private static Action<ProductDefinition>? onProductDiscovered;
+    private static Action<ProductDefinition>? onProductCreated;
 
     // ReSharper disable once ArrangeObjectCreationWhenTypeEvident
     private static readonly Dictionary<string, float> originalProductPrices = new Dictionary<string, float>(12);
@@ -60,30 +63,39 @@ namespace RecommendedPrice {
     }
 
     [HarmonyPrefix]
-    [HarmonyPatch(nameof(ProductManager.OnStartServer))]
+    [HarmonyPatch(typeof(ProductManager), nameof(ProductManager.OnStartServer))]
     static void PreStartServer(ProductManager __instance) {
       // applyModifiers(__instance);
 #if IL2CPP
-      onProductAction = DelegateSupport.ConvertDelegate<Action<ProductDefinition>>(onProduct);
+      onProductDiscovered = DelegateSupport.ConvertDelegate<Action<ProductDefinition>>(onProductDiscover);
+      onProductCreated = DelegateSupport.ConvertDelegate<Action<ProductDefinition>>(onProductCreate);
 #elif MONO
-      onProductAction = onProduct;
+      onProductDiscovered = onProductDiscover;
+      onProductCreated = onProductCreate;
 #endif
 
-      __instance.onProductDiscovered += onProductAction;
-      __instance.onNewProductCreated += onProductAction;
+      __instance.onProductDiscovered += onProductDiscovered;
+      __instance.onNewProductCreated += onProductCreated;
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch("Clean")]
+    [HarmonyPatch(typeof(ProductManager), "Clean")]
     static void PostClean(ProductManager __instance) {
       unapplyModifiers(__instance);
 
-      if (onProductAction == null)
+      if (onProductDiscovered == null)
         return;
 
-      __instance.onProductDiscovered -= onProductAction;
-      __instance.onNewProductCreated -= onProductAction;
-      onProductAction = null;
+      __instance.onProductDiscovered -= onProductDiscovered;
+      __instance.onNewProductCreated -= onProductCreated;
+      onProductDiscovered = null;
+      onProductCreated = null;
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(NewMixScreen), nameof(NewMixScreen.Open))]
+    static void PreOpen(EDrugType drugType, ref float productMarketValue) {
+      productMarketValue *= multiplier(drugType);
     }
 
     private static void applyInMainOnly() {
@@ -95,7 +107,7 @@ namespace RecommendedPrice {
 
       logger.Msg("attempting to apply recommended price modifiers");
 
-      var prices = getProductPrices(manager);
+      var prices = getProductPrices();
 
       if (prices == null) {
         logger.Error("failed to get product prices, cannot modify price values");
@@ -119,13 +131,22 @@ namespace RecommendedPrice {
       }
     }
 
-    private static void onProduct(ProductDefinition product) {
+    private static void onProductDiscover(ProductDefinition product) {
       originalProductPrices.TryAdd(product.ID, product.MarketValue);
       product.MarketValue = originalProductPrices[product.ID] * multiplier(product.DrugType);
     }
 
+    private static void onProductCreate(ProductDefinition product) {
+      originalProductPrices.TryAdd(product.ID, product.MarketValue);
+      product.MarketValue = originalProductPrices[product.ID] * multiplier(product.DrugType);
+
+      var prices = getProductPrices();
+      if (prices != null)
+        prices[product] = product.MarketValue;
+    }
+
     private static void unapplyModifiers(ProductManager manager) {
-      var prices = getProductPrices(manager);
+      var prices = getProductPrices();
       var logger = Melon<Mod>.Instance.LoggerInstance;
 
       logger.Msg("attempting to revert recommended price modifiers");
@@ -164,13 +185,13 @@ namespace RecommendedPrice {
       return pref.Value < 0.01f ? 0.01f : pref.Value;
     }
 
-    private static Dictionary<ProductDefinition, float>? getProductPrices(ProductManager manager) {
+    private static Dictionary<ProductDefinition, float>? getProductPrices() {
       var prop = AccessTools.DeclaredProperty(typeof(ProductManager), "ProductPrices");
 
       if (prop == null)
         return null;
 
-      return (Dictionary<ProductDefinition, float>?) prop.GetValue(manager);
+      return (Dictionary<ProductDefinition, float>?) prop.GetValue(NetworkSingleton<ProductManager>.Instance);
     }
   }
 }
