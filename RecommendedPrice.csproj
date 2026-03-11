@@ -42,9 +42,6 @@
     <Reference Include="Harmony">
       <HintPath>$(MonoMelonPath)/0Harmony.dll</HintPath>
     </Reference>
-<!--    <Reference Include="Runtime">-->
-<!--      <HintPath>$(MonoMelonPath)/Runtime.dll</HintPath>-->
-<!--    </Reference>-->
     <Reference Include="MelonLoader">
       <HintPath>$(MonoMelonPath)/MelonLoader.dll</HintPath>
     </Reference>
