@@ -95,7 +95,7 @@ namespace RecommendedPrice {
     [HarmonyPrefix]
     [HarmonyPatch(typeof(NewMixScreen), nameof(NewMixScreen.Open))]
     static void PreOpen(EDrugType drugType, ref float productMarketValue) {
-      productMarketValue *= multiplier(drugType);
+      productMarketValue = safeMultiply(productMarketValue, drugType);
     }
 
     private static void applyInMainOnly() {
@@ -119,7 +119,7 @@ namespace RecommendedPrice {
 
         originalProductPrices.TryAdd(product.ID, mktValue);
 
-        product.MarketValue = originalProductPrices[product.ID] * multiplier(product.DrugType);
+        product.MarketValue = safeMultiply(originalProductPrices[product.ID], product.DrugType);
 
         if (prices.TryGetValue(product, out var price)) {
           // ReSharper disable once CompareOfFloatsByEqualityOperator
@@ -133,12 +133,12 @@ namespace RecommendedPrice {
 
     private static void onProductDiscover(ProductDefinition product) {
       originalProductPrices.TryAdd(product.ID, product.MarketValue);
-      product.MarketValue = originalProductPrices[product.ID] * multiplier(product.DrugType);
+      product.MarketValue = safeMultiply(originalProductPrices[product.ID], product.DrugType);
     }
 
     private static void onProductCreate(ProductDefinition product) {
       originalProductPrices.TryAdd(product.ID, product.MarketValue);
-      product.MarketValue = originalProductPrices[product.ID] * multiplier(product.DrugType);
+      product.MarketValue = safeMultiply(originalProductPrices[product.ID], product.DrugType);
 
       var prices = getProductPrices();
       if (prices != null)
@@ -171,18 +171,19 @@ namespace RecommendedPrice {
       }
     }
 
-    private static float multiplier(EDrugType type) {
-      return type switch {
-        EDrugType.Marijuana => safeMultiplier(weedModifier!),
-        EDrugType.Methamphetamine => safeMultiplier(methModifier!),
-        EDrugType.Cocaine => safeMultiplier(cokeModifier!),
-        EDrugType.Shrooms => safeMultiplier(shrmModifier!),
+
+    private static float safeMultiply(float price, EDrugType type) {
+      var mult = type switch {
+        EDrugType.Marijuana => weedModifier!.Value,
+        EDrugType.Methamphetamine => methModifier!.Value,
+        EDrugType.Cocaine => cokeModifier!.Value,
+        EDrugType.Shrooms => shrmModifier!.Value,
         _ => 1
       };
-    }
 
-    private static float safeMultiplier(MelonPreferences_Entry<float> pref) {
-      return pref.Value < 0.01f ? 0.01f : pref.Value;
+      mult = mult < 0.01f ? 0.01f : mult;
+
+      return (float) Math.Round(price * mult, MidpointRounding.AwayFromZero);
     }
 
     private static Dictionary<ProductDefinition, float>? getProductPrices() {
