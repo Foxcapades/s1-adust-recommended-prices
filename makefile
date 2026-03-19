@@ -1,10 +1,11 @@
-VERSION := $(shell grep 'MelonInfo' RecommendedPrice/Mod.cs | cut -d'"' -f4 | tr -d '\n')
+PROJECT_ID := RecommendedPrice
+VERSION := $(shell grep 'MelonInfo' $(PROJECT_ID)/Mod.cs | cut -d'"' -f2 | tr -d '\n')
 
 CONFIGURATION := IL2Cpp
 LOWER_CONFIG := $(shell echo $(CONFIGURATION) | tr A-Z a-z)
 
-BUILD_DLL  := RecommendedPrice.dll
-OUTPUT_DLL := RecommendedPrice.$(CONFIGURATION).dll
+BUILD_DLL  := $(PROJECT_ID).dll
+OUTPUT_DLL := $(PROJECT_ID).$(CONFIGURATION).dll
 
 TARGET_DIRECTORY := target
 INSTALL_DIRECTORY := ${INSTALL_DIRECTORY}
@@ -17,7 +18,7 @@ endif
 
 BUILD_TARGET := bin/$(CONFIGURATION)/$(NET_PATH)/$(BUILD_DLL)
 OUTPUT_TARGET := $(TARGET_DIRECTORY)/$(OUTPUT_DLL)
-RELEASE_ZIP := $(TARGET_DIRECTORY)/rp-$(LOWER_CONFIG)-v$(VERSION).zip
+RELEASE_ZIP := $(TARGET_DIRECTORY)/$(shell echo $(PROJECT_ID) | tr -d a-z | tr A-Z a-z)-$(LOWER_CONFIG)-v$(VERSION).zip
 
 .PHONY: default
 default:
@@ -54,7 +55,7 @@ build-il2cpp:
 package-il2cpp:
 	@$(MAKE) CONFIGURATION=IL2Cpp package
 
-$(BUILD_TARGET): RecommendedPrice/Mod.cs
+$(BUILD_TARGET): $(PROJECT_ID)/Mod.cs
 	@dotnet build -c $(CONFIGURATION)
 
 $(OUTPUT_TARGET): $(BUILD_TARGET)

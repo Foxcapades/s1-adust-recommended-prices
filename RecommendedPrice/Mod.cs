@@ -15,13 +15,15 @@ using System;
 using System.Collections.Generic;
 #endif
 
-[assembly: MelonInfo(typeof(RecommendedPrice.Mod), "Recommended Price", "1.1.0", "Foxcapades")]
+[assembly: MelonInfo(typeof(RecommendedPrice.Mod), RecommendedPrice.Mod.MOD_NAME, "1.1.0", "Foxcapades")]
 [assembly: MelonGame("TVGS", "Schedule I")]
 
 #nullable enable
 namespace RecommendedPrice {
   [HarmonyPatch]
   public class Mod: MelonMod {
+    public const string MOD_NAME = "Recommended Price";
+
     private static MelonPreferences_Category? preferences;
     private static MelonPreferences_Entry<float>? weedModifier;
     private static MelonPreferences_Entry<float>? cokeModifier;
