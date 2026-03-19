@@ -15,7 +15,7 @@ using System;
 using System.Collections.Generic;
 #endif
 
-[assembly: MelonInfo(typeof(RecommendedPrice.Mod), "Recommended Price", "1.0.0", "Foxcapades")]
+[assembly: MelonInfo(typeof(RecommendedPrice.Mod), "Recommended Price", "1.1.0", "Foxcapades")]
 [assembly: MelonGame("TVGS", "Schedule I")]
 
 #nullable enable
