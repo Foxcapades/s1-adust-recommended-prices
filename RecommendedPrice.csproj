@@ -15,48 +15,54 @@
 
   <ItemGroup Condition="'$(Configuration)'=='IL2Cpp'">
     <Reference Include="Harmony">
-      <HintPath>$(MelonIL2CppPath)/net6/0Harmony.dll</HintPath>
+      <HintPath>$(MelonPath)/0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Il2CppInterop.Runtime">
-      <HintPath>$(MelonIL2CppPath)/net6/Il2CppInterop.Runtime.dll</HintPath>
+      <HintPath>$(MelonPath)/Il2CppInterop.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="MelonLoader">
-      <HintPath>$(MelonIL2CppPath)/net6/MelonLoader.dll</HintPath>
+      <HintPath>$(MelonPath)/MelonLoader.dll</HintPath>
     </Reference>
 
     <Reference Include="Assembly-CSharp">
-      <HintPath>$(MelonIL2CppPath)/Il2CppAssemblies/Assembly-CSharp.dll</HintPath>
+      <HintPath>$(AssembliesPath)/Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Il2CppFishNet.Runtime">
-      <HintPath>$(MelonIL2CppPath)/Il2CppAssemblies/Il2CppFishNet.Runtime.dll</HintPath>
+      <HintPath>$(AssembliesPath)/Il2CppFishNet.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Il2Cppmscorlib">
-      <HintPath>$(MelonIL2CppPath)/Il2CppAssemblies/Il2Cppmscorlib.dll</HintPath>
+      <HintPath>$(AssembliesPath)/Il2Cppmscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppScheduleOne.Core">
+      <HintPath>$(AssembliesPath)/Il2CppScheduleOne.Core.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(MelonIL2CppPath)/Il2CppAssemblies/UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$(AssembliesPath)/UnityEngine.CoreModule.dll</HintPath>
     </Reference>
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)'=='Mono'">
     <Reference Include="Harmony">
-      <HintPath>$(MonoMelonPath)/0Harmony.dll</HintPath>
+      <HintPath>$(MelonPath)/0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="MelonLoader">
-      <HintPath>$(MonoMelonPath)/MelonLoader.dll</HintPath>
+      <HintPath>$(MelonPath)/MelonLoader.dll</HintPath>
     </Reference>
 
     <Reference Include="Assembly-CSharp">
-      <HintPath>$(MonoAssembliesPath)/Assembly-CSharp.dll</HintPath>
+      <HintPath>$(AssembliesPath)/Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="FishNet.Runtime">
-      <HintPath>$(MonoAssembliesPath)/FishNet.Runtime.dll</HintPath>
+      <HintPath>$(AssembliesPath)/FishNet.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
-      <HintPath>$(MonoAssembliesPath)/mscorlib.dll</HintPath>
+      <HintPath>$(AssembliesPath)/mscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="ScheduleOne.Core">
+      <HintPath>$(AssembliesPath)/ScheduleOne.Core.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(MonoAssembliesPath)/UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$(AssembliesPath)/UnityEngine.CoreModule.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
