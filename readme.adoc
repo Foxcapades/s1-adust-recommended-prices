@@ -1,3 +1,0 @@
-= Schedule I - Adjustable Recommended Price
-
-Allows adjusting the recommended price for products.
